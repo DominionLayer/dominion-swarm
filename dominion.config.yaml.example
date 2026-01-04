@@ -1,0 +1,288 @@
+# Dominion Configuration File
+# Copy to dominion.config.yaml and customize
+
+# General Settings
+general:
+  name: "dominion-instance"
+  environment: "development"
+  dry_run: true
+  require_approval: true
+
+# LLM Provider Configuration
+llm:
+  default_provider: "openai"  # openai | anthropic | stub
+  
+  openai:
+    model: "gpt-4-turbo-preview"
+    temperature: 0.1
+    max_tokens: 4096
+  
+  anthropic:
+    model: "claude-3-5-sonnet-20241022"
+    temperature: 0.1
+    max_tokens: 4096
+  
+  stub:
+    # For offline testing
+    deterministic: true
+
+# Database Configuration
+database:
+  path: "./data/dominion.db"
+  
+# Logging Configuration
+logging:
+  level: "info"  # debug | info | warn | error
+  format: "json"  # json | pretty
+  file: "./logs/dominion.log"
+
+# Rate Limiting
+rate_limits:
+  rpc_per_second: 10
+  llm_per_minute: 60
+
+# Observe Plugin Configuration
+observe:
+  enabled: true
+  
+  # EVM Chain Watchers
+  evm:
+    rpc_url: "${EVM_RPC_URL}"
+    chain_id: 1
+    
+    # Addresses to watch
+    watch_addresses:
+      - address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"  # USDC
+        label: "USDC Contract"
+        watch_incoming: true
+        watch_outgoing: true
+      - address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"  # USDT
+        label: "USDT Contract"
+        watch_incoming: true
+        watch_outgoing: true
+    
+    # Contract Events to Monitor
+    watch_events:
+      - contract: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        label: "USDC Transfers"
+        abi:
+          - "event Transfer(address indexed from, address indexed to, uint256 value)"
+        events:
+          - "Transfer"
+        filters:
+          # Optional: filter by specific parameters
+          # from: "0x..."
+          # to: "0x..."
+          min_value: "1000000000"  # 1000 USDC (6 decimals)
+    
+    # Block Range (optional)
+    start_block: "latest"
+    confirmations: 3
+    
+    # Retry Configuration
+    retry:
+      max_attempts: 3
+      base_delay_ms: 1000
+      max_delay_ms: 30000
+
+# Analyze Plugin Configuration
+analyze:
+  enabled: true
+  
+  # Scoring Configuration
+  scoring:
+    min_score: 0
+    max_score: 100
+    threshold_alert: 70
+    threshold_action: 85
+  
+  # Classification Categories
+  categories:
+    - name: "large_transfer"
+      description: "Unusually large token transfer"
+      base_score: 60
+    - name: "whale_activity"
+      description: "Known whale address activity"
+      base_score: 75
+    - name: "contract_interaction"
+      description: "Smart contract interaction"
+      base_score: 40
+    - name: "routine"
+      description: "Normal/routine activity"
+      base_score: 10
+  
+  # Fallback scoring (when LLM unavailable)
+  fallback:
+    enabled: true
+    default_category: "routine"
+
+# Execute Plugin Configuration
+execute:
+  enabled: true
+  
+  # Safety Settings
+  safety:
+    dry_run: true
+    require_approval: true
+    max_retries: 3
+  
+  # Enabled Actions
+  actions:
+    webhook:
+      enabled: true
+      allowed_urls:
+        - "https://hooks.slack.com/*"
+        - "https://discord.com/api/webhooks/*"
+    
+    file_write:
+      enabled: true
+      allowed_paths:
+        - "./reports/*"
+        - "./exports/*"
+    
+    evm_transaction:
+      enabled: false  # Disabled by default for safety
+      # private_key from EXECUTOR_PRIVATE_KEY env var
+
+# Infrastructure Plugin Configuration
+infra:
+  enabled: true
+  
+  # Worker Pool
+  workers:
+    concurrency: 4
+    poll_interval_ms: 1000
+  
+  # Job Queue
+  queue:
+    max_retries: 3
+    retry_delay_ms: 5000
+  
+  # Scheduling
+  scheduler:
+    enabled: true
+    timezone: "UTC"
+
+# Market Plugin Configuration (Simulation)
+market:
+  enabled: true
+  
+  # Simulation Settings
+  simulation:
+    initial_balance: 10000
+    escrow_percentage: 10
+    sla_penalty_rate: 5
+  
+  # Provider Settings
+  providers:
+    min_reputation: 50
+    bid_timeout_seconds: 300
+
+# Governance Plugin Configuration
+governance:
+  enabled: true
+  
+  # Proposal Settings
+  proposals:
+    min_discussion_period_hours: 24
+    voting_period_hours: 48
+    quorum_percentage: 30
+    approval_threshold: 51
+  
+  # Execution Settings
+  execution:
+    require_approval: true
+    delay_hours: 24
+
+# Self-Improvement Plugin Configuration
+selfimprove:
+  enabled: true
+  
+  # Metrics Tracking
+  metrics:
+    retention_days: 30
+    aggregate_interval_hours: 24
+  
+  # Suggestion Settings
+  suggestions:
+    min_confidence: 0.7
+    require_approval: true
+    auto_apply: false  # MUST remain false
+
+# Agent Definitions
+agents:
+  - id: "watcher-1"
+    role: "watcher"
+    name: "Primary Watcher"
+    description: "Monitors EVM chain activity"
+    tools:
+      - "observe:watch_blocks"
+      - "observe:watch_events"
+    policy:
+      max_observations_per_minute: 100
+  
+  - id: "analyst-1"
+    role: "analyst"
+    name: "Primary Analyst"
+    description: "Analyzes and scores observations"
+    tools:
+      - "analyze:classify"
+      - "analyze:score"
+    policy:
+      require_rationale: true
+  
+  - id: "executor-1"
+    role: "executor"
+    name: "Primary Executor"
+    description: "Executes approved actions"
+    tools:
+      - "execute:webhook"
+      - "execute:file_write"
+    policy:
+      require_approval: true
+      dry_run_default: true
+  
+  - id: "auditor-1"
+    role: "auditor"
+    name: "Safety Auditor"
+    description: "Reviews and approves dangerous actions"
+    tools:
+      - "audit:review"
+      - "audit:approve"
+      - "audit:veto"
+    policy:
+      can_veto: true
+
+# Workflow Definitions
+workflows:
+  sentinel:
+    description: "Watch, analyze, and report"
+    steps:
+      - plugin: "observe"
+        action: "watch"
+      - plugin: "analyze"
+        action: "score"
+      - plugin: "execute"
+        action: "report"
+  
+  operator:
+    description: "Watch, analyze, and propose actions"
+    steps:
+      - plugin: "observe"
+        action: "watch"
+      - plugin: "analyze"
+        action: "score"
+      - plugin: "execute"
+        action: "propose"
+  
+  autopilot:
+    description: "Full autonomous pipeline with approval gates"
+    steps:
+      - plugin: "observe"
+        action: "watch"
+      - plugin: "analyze"
+        action: "score"
+      - plugin: "execute"
+        action: "execute"
+        require_approval: true
+
