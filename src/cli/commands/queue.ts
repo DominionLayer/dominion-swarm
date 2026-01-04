@@ -128,7 +128,7 @@ async function addToQueue(type: string, options: { payload?: string; priority: s
     }
 
     const data = result.data as any;
-    console.log(chalk.green(`✓ Job added: ${chalk.cyan(data.jobId)}`));
+    console.log(chalk.green(`[OK] Job added: ${chalk.cyan(data.jobId)}`));
 
     await plugin.shutdown();
     db.close();

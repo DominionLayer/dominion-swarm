@@ -54,10 +54,10 @@ export const doctorCommand = new Command('doctor')
     let hasWarnings = false;
 
     for (const result of results) {
-      const icon = result.status === 'pass' ? chalk.green('✓') :
-                   result.status === 'fail' ? chalk.red('✗') :
-                   result.status === 'warn' ? chalk.yellow('⚠') :
-                   chalk.gray('○');
+      const icon = result.status === 'pass' ? chalk.green('[OK]') :
+                   result.status === 'fail' ? chalk.red('[FAIL]') :
+                   result.status === 'warn' ? chalk.yellow('[WARN]') :
+                   chalk.gray('[SKIP]');
       
       console.log(`${icon} ${result.name}`);
       console.log(`  ${chalk.gray(result.message)}`);

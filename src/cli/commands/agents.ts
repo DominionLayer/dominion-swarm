@@ -176,7 +176,7 @@ async function showAgent(agentId: string): Promise<void> {
       console.log();
       console.log(chalk.bold('Recent Tasks:'));
       for (const task of tasks.slice(0, 5)) {
-        const statusIcon = task.status === 'completed' ? '✓' : task.status === 'failed' ? '✗' : '○';
+        const statusIcon = task.status === 'completed' ? '[done]' : task.status === 'failed' ? '[fail]' : '[..]';
         console.log(`  ${statusIcon} ${task.type} (${task.status})`);
       }
     }

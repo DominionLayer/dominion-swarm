@@ -61,7 +61,7 @@ export const initCommand = new Command('init')
       }
 
       console.log();
-      console.log(chalk.green('✓ Dominion initialized successfully!'));
+      console.log(chalk.green('[OK] Dominion initialized successfully!'));
       console.log();
       console.log('Next steps:');
       console.log(`  1. Copy ${chalk.cyan('.env.example')} to ${chalk.cyan('.env')} and add your API keys`);

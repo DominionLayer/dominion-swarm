@@ -6,13 +6,13 @@ Dominion is a production-grade CLI application for running autonomous agent swar
 
 ## Features
 
-- 🤖 **Multi-Agent System**: Agents with distinct roles (watcher, analyst, executor, coordinator, auditor, governor)
-- 🔗 **Blockchain Integration**: Watch EVM chains using ethers v6 (blocks, transactions, events)
-- 🧠 **LLM-Powered Analysis**: Connect to OpenAI or Anthropic for intelligent analysis
-- 🔒 **Safe by Default**: Dry-run mode, approval gates, and auditor oversight
-- 📊 **Full Audit Trail**: SQLite-based persistence for all runs, tasks, and decisions
-- 🔌 **Plugin Architecture**: Modular plugins for observe, analyze, execute, infra, market, governance, self-improve
-- 📝 **Structured Logging**: JSON-formatted logs with run/agent/task context
+- **Multi-Agent System**: Agents with distinct roles (watcher, analyst, executor, coordinator, auditor, governor)
+- **Blockchain Integration**: Watch EVM chains using ethers v6 (blocks, transactions, events)
+- **LLM-Powered Analysis**: Connect to OpenAI or Anthropic for intelligent analysis
+- **Safe by Default**: Dry-run mode, approval gates, and auditor oversight
+- **Full Audit Trail**: SQLite-based persistence for all runs, tasks, and decisions
+- **Plugin Architecture**: Modular plugins for observe, analyze, execute, infra, market, governance, self-improve
+- **Structured Logging**: JSON-formatted logs with run/agent/task context
 
 ## Quick Start
 

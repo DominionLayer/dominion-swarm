@@ -83,7 +83,7 @@ async function executeReport(runId: string, format: string): Promise<void> {
     const data = result.data as any;
 
     console.log();
-    console.log(chalk.green('✓ Report generated successfully'));
+    console.log(chalk.green('[OK] Report generated successfully'));
     console.log();
     console.log('Files created:');
     for (const file of data.files) {
@@ -150,7 +150,7 @@ async function executeWebhook(url: string, data: string | undefined, approve: bo
     if (response.dryRun) {
       console.log(chalk.yellow('DRY RUN: Would send webhook to ') + chalk.cyan(url));
     } else {
-      console.log(chalk.green(`✓ Webhook sent successfully (status: ${response.statusCode})`));
+      console.log(chalk.green(`[OK] Webhook sent successfully (status: ${response.statusCode})`));
     }
 
     await plugin.shutdown();

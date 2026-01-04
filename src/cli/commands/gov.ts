@@ -130,7 +130,7 @@ async function createProposal(title: string, options: { description?: string; ca
     const data = result.data as any;
 
     console.log();
-    console.log(chalk.green('✓ Proposal created'));
+    console.log(chalk.green('[OK] Proposal created'));
     console.log(`  ID: ${chalk.cyan(data.proposalId)}`);
     console.log(`  Status: ${data.status}`);
     console.log(`  Discussion ends: ${new Date(data.discussionEndAt).toISOString()}`);
@@ -180,7 +180,7 @@ async function voteOnProposal(proposalId: string, choice: string, options: { rea
     const data = result.data as any;
 
     console.log();
-    console.log(chalk.green('✓ Vote cast'));
+    console.log(chalk.green('[OK] Vote cast'));
     console.log(`  Choice: ${choice}`);
     console.log(`  Current tally: For=${chalk.green(data.currentTally.for)}, Against=${chalk.red(data.currentTally.against)}, Abstain=${data.currentTally.abstain}`);
 
@@ -235,7 +235,7 @@ async function showProposal(proposalId: string): Promise<void> {
     if (votes.length > 0) {
       console.log(chalk.bold('Recent Votes:'));
       for (const vote of votes.slice(0, 5)) {
-        const icon = vote.choice === 'for' ? '👍' : vote.choice === 'against' ? '👎' : '🤷';
+        const icon = vote.choice === 'for' ? '[+]' : vote.choice === 'against' ? '[-]' : '[?]';
         console.log(`  ${icon} ${vote.voter_id.slice(0, 8)}: ${vote.reason || 'No reason'}`);
       }
     }
